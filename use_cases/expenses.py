@@ -71,7 +71,7 @@ class CreateExpenseUseCase:
                     title=name,
                     amount=amount,
                     date=date,
-                    category=category,
+                    category=category.name,
                     account_id=account.id,
                     credit_card_id=None,
                 )
