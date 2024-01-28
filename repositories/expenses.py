@@ -12,9 +12,38 @@ class ExpenseRepository:
             "type": "database_id",
             "database_id": self.db_id,
         }
+        self.icon = {"type": "emoji", "emoji": "📤"}
+        self.children = [
+            {
+                "object": "block",
+                "type": "heading_1",
+                "heading_1": {
+                    "rich_text": [{"type": "text", "text": {"content": "Descrição"}}]
+                },
+            },
+            {
+                "object": "block",
+                "type": "bulleted_list_item",
+                "bulleted_list_item": {
+                    "rich_text": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "content": "",
+                            },
+                        }
+                    ],
+                },
+            },
+        ]
 
     def create_expense(self, expense: Expense):
-        data = {"parent": self.parent, "properties": {}}
+        data = {
+            "parent": self.parent,
+            "properties": {},
+            "icon": self.icon,
+            "children": self.children,
+        }
 
         data["properties"]["Expense"] = {
             "title": [{"text": {"content": expense.title}}]
