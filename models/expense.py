@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 class Expense(BaseModel):
     title: str
     amount: float
-    category: str
+    category: Optional[str] = Field(..., required=False)
     date: datetime
     credit_card_id: Optional[str] = Field(..., required=False)
     account_id: Optional[str] = Field(..., required=False)
