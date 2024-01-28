@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Expense(BaseModel):
@@ -9,8 +9,8 @@ class Expense(BaseModel):
     amount: float
     category: str
     date: datetime
-    credit_card_id: Optional[str]
-    debit: Optional[str]
+    credit_card_id: Optional[str] = Field(..., required=False)
+    account_id: Optional[str] = Field(..., required=False)
 
 
 class Category(BaseModel):
