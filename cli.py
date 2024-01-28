@@ -1,6 +1,6 @@
 from datetime import datetime
 import os
-from typing import Optional
+from typing import Annotated, Optional
 
 import click
 from dotenv import load_dotenv
@@ -36,7 +36,7 @@ account_repo = AccountRepository(
 def get_category_choice(categories: list[Category]):
     categories_names = [category.name for category in categories]
     questions = [
-        List("category", message="Select a category:", choices=categories_names)
+        List("category", message="Select a category", choices=categories_names)
     ]
     answers = prompt(questions)
     return answers["category"]
@@ -47,7 +47,7 @@ def get_payment_method_choice():
     questions = [
         List(
             "payment_method",
-            message="Select a payment method:",
+            message="Select a payment method",
             choices=payment_methods,
         )
     ]
@@ -58,7 +58,7 @@ def get_payment_method_choice():
 def get_credit_card_choice(credit_cards: list[CreditCard]):
     cards_names = [card.card_name for card in credit_cards]
     questions = [
-        List("credit_card", message="Select a Credit Card:", choices=cards_names)
+        List("credit_card", message="Select a Credit Card", choices=cards_names)
     ]
     answers = prompt(questions)
     return answers["credit_card"]
@@ -77,15 +77,20 @@ def get_account_choice(accounts: list[Account]):
     return answers["account"]
 
 
-@app.command()
-def create_expense():
+@app.command(
+    help="Create a new expense. It will ask for the expense name, cost, purchase date, category, payment method and credit card or account used to do it."
+)
+def create_expense(
+    expense_name: Annotated[str, typer.Option(prompt="What's the expense?")],
+    cost: Annotated[float, typer.Option(prompt="How much did it cost?")],
+    payment_method="",
+):
+    print(expense_name)
     create_expense_use_case = CreateExpenseUseCase(
         expense_repository=expense_repo,
         account_repository=account_repo,
         credit_card_repository=credit_repo,
     )
-    expense_name = typer.prompt("What's the expense?")
-    cost = typer.prompt("How much did it cost?", type=float)
     purchase_date: datetime = typer.prompt(
         "When did you buy it?", type=click.DateTime(formats=["%d/%m/%y"])
     )
@@ -94,9 +99,10 @@ def create_expense():
     selected_category = get_category_choice(create_expense_use_case.categories)
 
     # Asking for payment method
-    selected_payment_method = get_payment_method_choice()
+    if not payment_method:
+        payment_method = get_payment_method_choice()
 
-    if selected_payment_method == "Credit":
+    if payment_method == "Credit":
         # Asking for credit card selection
         create_expense_use_case.load_credit_cards()
         selected_credit_card = get_credit_card_choice(
@@ -110,7 +116,7 @@ def create_expense():
             None,
             selected_credit_card,
         )
-    else:
+    elif payment_method == "Debit":
         # Asking for debit card selection
         create_expense_use_case.load_accounts()
         selected_account = get_account_choice(create_expense_use_case.accounts)
@@ -122,6 +128,9 @@ def create_expense():
             selected_account,
             None,
         )
+    else:
+        typer.echo("Invalid payment method")
+        return
     typer.echo("Expense created successfully!")
 
 
