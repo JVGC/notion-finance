@@ -27,8 +27,8 @@ class ExpenseRepository:
             data["properties"]["Credit Card"] = {
                 "relation": [{"id": expense.credit_card_id}]
             }
-        if expense.debit:
-            data["properties"]["Debit"] = {"relation": [{"id": expense.debit}]}
+        if expense.account_id:
+            data["properties"]["Debit"] = {"relation": [{"id": expense.account_id}]}
         return self.client.pages.create(**data)
 
     def get_category_options(self) -> List[Category]:
