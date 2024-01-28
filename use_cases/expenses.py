@@ -55,13 +55,15 @@ class CreateExpenseUseCase:
         name: str,
         amount: int | float,
         date: datetime.date,
-        category_name: str,
+        category_name: Optional[str],
         account_name: Optional[str],
         credit_card_name: Optional[str],
     ):
-        category = next(
-            filter(lambda category: category.name == category_name, self.categories)
-        )
+        category = None
+        if category_name:
+            category = next(
+                filter(lambda category: category.name == category_name, self.categories)
+            )
         if account_name:
             account = next(
                 filter(lambda account: account.name == account_name, self.accounts)
@@ -71,7 +73,7 @@ class CreateExpenseUseCase:
                     title=name,
                     amount=amount,
                     date=date,
-                    category=category.name,
+                    category=category.name if category else None,
                     account_id=account.id,
                     credit_card_id=None,
                 )
@@ -88,7 +90,7 @@ class CreateExpenseUseCase:
                     title=name,
                     amount=amount,
                     date=date,
-                    category=category.name,
+                    category=category.name if category else None,
                     credit_card_id=credit_card.id,
                     account_id=None,
                 )

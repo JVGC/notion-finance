@@ -33,13 +33,20 @@ account_repo = AccountRepository(
 )
 
 
-def get_category_choice(categories: list[Category]):
+def get_category_choice(categories: list[Category]) -> str | None:
+    categories.append(
+        Category(id="No Category ID", name="No Category", color="", description="")
+    )
     categories_names = [category.name for category in categories]
     questions = [
-        List("category", message="Select a category", choices=categories_names)
+        List(
+            "category",
+            message="Select a category",
+            choices=categories_names,
+        )
     ]
     answers = prompt(questions)
-    return answers["category"]
+    return answers["category"] if answers["category"] != "No Category" else None
 
 
 def get_payment_method_choice():
@@ -85,7 +92,6 @@ def create_expense(
     cost: Annotated[float, typer.Option(prompt="How much did it cost?")],
     payment_method="",
 ):
-    print(expense_name)
     create_expense_use_case = CreateExpenseUseCase(
         expense_repository=expense_repo,
         account_repository=account_repo,

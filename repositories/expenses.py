@@ -20,7 +20,8 @@ class ExpenseRepository:
             "title": [{"text": {"content": expense.title}}]
         }
         data["properties"]["Amount"] = {"number": expense.amount}
-        data["properties"]["Categoria"] = {"select": {"name": expense.category}}
+        if expense.category:
+            data["properties"]["Categoria"] = {"select": {"name": expense.category}}
         data["properties"]["Date"] = {"date": {"start": expense.date.isoformat()}}
 
         if expense.credit_card_id:
