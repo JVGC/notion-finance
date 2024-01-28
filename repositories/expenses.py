@@ -5,14 +5,15 @@ from models.expense import Category, Expense
 
 
 class ExpenseRepository:
-    def __init__(self, database_id: str):
+    def __init__(self, database_id: str, client: Client):
         self.db_id = database_id
+        self.client = client
         self.parent = {
             "type": "database_id",
             "database_id": self.db_id,
         }
 
-    def create_expense(self, expense: Expense, client: Client):
+    def create_expense(self, expense: Expense):
         data = {"parent": self.parent, "properties": {}}
 
         data["properties"]["Expense"] = {
@@ -28,11 +29,11 @@ class ExpenseRepository:
             }
         if expense.debit:
             data["properties"]["Debit"] = {"relation": [{"id": expense.debit}]}
-        return client.pages.create(**data)
+        return self.client.pages.create(**data)
 
-    def get_category_options(self, client: Client) -> List[Category]:
+    def get_category_options(self) -> List[Category]:
         categories_dict = (
-            client.databases.retrieve(database_id=self.db_id)
+            self.client.databases.retrieve(database_id=self.db_id)
             .get("properties")
             .get("Categoria")
             .get("select")
