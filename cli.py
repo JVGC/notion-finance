@@ -1,4 +1,3 @@
-from datetime import datetime
 import os
 from typing import Annotated, Literal, Optional
 
@@ -99,10 +98,9 @@ def create_expense(
         account_repository=account_repo,
         credit_card_repository=credit_repo,
     )
-    purchase_date: datetime = typer.prompt(
+    purchase_date = typer.prompt(
         "When did you buy it?", type=click.DateTime(formats=["%d/%m/%y"])
     )
-
     # Asking for category
     selected_category = get_category_choice(create_expense_use_case.categories)
 
@@ -121,7 +119,7 @@ def create_expense(
         create_expense_use_case.create(
             expense_name,
             cost,
-            purchase_date.date(),
+            purchase_date,
             selected_category,
             None,
             selected_credit_card,
@@ -139,7 +137,7 @@ def create_expense(
         create_expense_use_case.create(
             expense_name,
             cost,
-            purchase_date.date(),
+            purchase_date,
             selected_category,
             selected_account,
             None,
@@ -148,6 +146,7 @@ def create_expense(
         typer.echo(
             f"Expense: {expense_name}, Cost: {cost}, Date: {purchase_date}, Category: {selected_category}, Account: {selected_account}"
         )
+        # TODO Show link to access the created page
     else:
         typer.echo("Invalid payment method")
         return

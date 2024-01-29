@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 from models.account import Account
 from models.credit_card import CreditCard
@@ -54,7 +54,7 @@ class CreateExpenseUseCase:
         self,
         name: str,
         amount: int | float,
-        date: datetime.date,
+        date: datetime,
         category_name: Optional[str],
         account_name: Optional[str],
         credit_card_name: Optional[str],
@@ -72,7 +72,7 @@ class CreateExpenseUseCase:
                 Expense(
                     title=name,
                     amount=amount,
-                    date=date,
+                    date=date.astimezone(timezone.utc).isoformat(),
                     category=category.name if category else None,
                     account_id=account.id,
                     credit_card_id=None,
@@ -89,7 +89,7 @@ class CreateExpenseUseCase:
                 Expense(
                     title=name,
                     amount=amount,
-                    date=date,
+                    date=date.astimezone(timezone.utc).isoformat(),
                     category=category.name if category else None,
                     credit_card_id=credit_card.id,
                     account_id=None,

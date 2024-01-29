@@ -51,7 +51,7 @@ class ExpenseRepository:
         data["properties"]["Amount"] = {"number": expense.amount}
         if expense.category:
             data["properties"]["Categoria"] = {"select": {"name": expense.category}}
-        data["properties"]["Date"] = {"date": {"start": expense.date.isoformat()}}
+        data["properties"]["Date"] = {"date": {"start": expense.date}}
 
         if expense.credit_card_id:
             data["properties"]["Credit Card"] = {
