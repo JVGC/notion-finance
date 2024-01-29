@@ -37,7 +37,7 @@ class ExpenseRepository:
             },
         ]
 
-    def create_expense(self, expense: Expense):
+    def create_expense(self, expense: Expense) -> str:
         data = {
             "parent": self.parent,
             "properties": {},
@@ -59,7 +59,8 @@ class ExpenseRepository:
             }
         if expense.account_id:
             data["properties"]["Debit"] = {"relation": [{"id": expense.account_id}]}
-        return self.client.pages.create(**data)
+        response = self.client.pages.create(**data)
+        return response["url"]
 
     def get_category_options(self) -> List[Category]:
         categories_dict = (

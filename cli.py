@@ -116,7 +116,7 @@ def create_expense(
             selected_credit_card = get_credit_card_choice(
                 create_expense_use_case.credit_cards
             )
-        create_expense_use_case.create(
+        created_url = create_expense_use_case.create(
             expense_name,
             cost,
             purchase_date,
@@ -128,13 +128,14 @@ def create_expense(
         typer.echo(
             f"Expense: {expense_name}, Cost: {cost}, Date: {purchase_date}, Category: {selected_category}, Credit Card: {selected_credit_card}"
         )
+        typer.echo(f"Access the created page here: {created_url}")
     elif payment_method == "Debit" or account:
         # Asking for debit card selection
         create_expense_use_case.load_accounts()
         selected_account = account
         if not account:
             selected_account = get_account_choice(create_expense_use_case.accounts)
-        create_expense_use_case.create(
+        created_url = create_expense_use_case.create(
             expense_name,
             cost,
             purchase_date,
@@ -146,6 +147,7 @@ def create_expense(
         typer.echo(
             f"Expense: {expense_name}, Cost: {cost}, Date: {purchase_date}, Category: {selected_category}, Account: {selected_account}"
         )
+        typer.echo(f"Access the created page here: {created_url}")
         # TODO Show link to access the created page
     else:
         typer.echo("Invalid payment method")

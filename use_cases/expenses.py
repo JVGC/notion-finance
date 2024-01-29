@@ -58,7 +58,7 @@ class CreateExpenseUseCase:
         category_name: Optional[str],
         account_name: Optional[str],
         credit_card_name: Optional[str],
-    ):
+    ) -> str:
         category = None
         if category_name:
             category = next(
@@ -68,7 +68,7 @@ class CreateExpenseUseCase:
             account = next(
                 filter(lambda account: account.name == account_name, self.accounts)
             )
-            self.expense_repository.create_expense(
+            created_url = self.expense_repository.create_expense(
                 Expense(
                     title=name,
                     amount=amount,
@@ -78,6 +78,7 @@ class CreateExpenseUseCase:
                     credit_card_id=None,
                 )
             )
+            return created_url
 
         if credit_card_name:
             credit_card = next(
@@ -85,7 +86,7 @@ class CreateExpenseUseCase:
                     lambda card: card.card_name == credit_card_name, self.credit_cards
                 )
             )
-            self.expense_repository.create_expense(
+            created_url = self.expense_repository.create_expense(
                 Expense(
                     title=name,
                     amount=amount,
@@ -95,3 +96,7 @@ class CreateExpenseUseCase:
                     account_id=None,
                 )
             )
+
+            return created_url
+
+        return ""
