@@ -33,8 +33,8 @@ account_repo = AccountRepository(
 
 
 def get_category_choice(categories: list[Category]) -> str | None:
-    categories.append(
-        Category(id="No Category ID", name="No Category", color="", description="")
+    categories.insert(
+        0, Category(id="No Category ID", name="No Category", color="", description="")
     )
     categories_names = [category.name for category in categories]
     questions = [
